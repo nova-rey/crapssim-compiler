@@ -3,7 +3,7 @@
 **Design craps strategies visually → compile into [CrapsSim](https://skent259.github.io/crapssim/) strategies.**
 
 This Node-RED contrib package provides drag-and-drop nodes for building, validating, and exporting craps betting strategies.  
-It is a **vanilla-only** release (no experimental “Evo” features) intended for day-to-day use with CrapsSim.
+It is a **vanilla-only** release intended for day-to-day use with CrapsSim.
 
 ---
 
