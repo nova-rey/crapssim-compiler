@@ -27,4 +27,4 @@ It is a **vanilla-only** release intended for day-to-day use with CrapsSim.
 
 ```bash
 cd ~/.node-red
-npm install yourname/crapssim-compiler
+npm install nova-rey/crapssim-compiler
