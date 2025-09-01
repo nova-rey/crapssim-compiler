@@ -1,0 +1,47 @@
+<script type="text/html" data-template-name="maingame-marker">
+  <div class="form-row">
+    <label for="node-input-action"><i class="fa fa-play-circle"></i> Action</label>
+    <select id="node-input-action">
+      <option value="begin">begin</option>
+      <option value="end">end</option>
+    </select>
+  </div>
+  <div class="form-row">
+    <label for="node-input-title"><i class="fa fa-tag"></i> Title</label>
+    <input type="text" id="node-input-title" placeholder="optional label shown in recipe">
+  </div>
+  <div class="form-row">
+    <label for="node-input-note"><i class="fa fa-sticky-note"></i> Note</label>
+    <input type="text" id="node-input-note" placeholder="optional note">
+  </div>
+</script>
+
+<script type="text/html" data-help-name="maingame-marker">
+  <p>Marks the <b>Main Game (point-on)</b> section with <code>begin</code> or <code>end</code>.</p>
+  <pre>{
+  "type": "section",
+  "phase": "maingame",
+  "action": "begin|end",
+  "title": "...",
+  "note": "..."
+}</pre>
+</script>
+
+<script type="text/javascript">
+  RED.nodes.registerType("maingame-marker", {
+    category: "craps",
+    color: "#E9F0FE",
+    icon: "font-awesome/fa-bookmark",
+    defaults: {
+      action: { value: "begin", required: true },
+      title:  { value: "" },
+      note:   { value: "" }
+    },
+    inputs: 1,
+    outputs: 1,
+    label: function() {
+      const t = this.title ? (": " + this.title) : "";
+      return `Main Game ${this.action}${t}`;
+    }
+  });
+</script>

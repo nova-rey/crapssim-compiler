@@ -1,0 +1,95 @@
+<script type="text/html" data-template-name="bet-type">
+  <div class="form-row">
+    <label for="node-input-kind"><i class="fa fa-dice"></i> Bet kind</label>
+    <select id="node-input-kind">
+      <option value="Pass">Pass</option>
+      <option value="DontPass">DontPass</option>
+      <option value="Come">Come</option>
+      <option value="DontCome">DontCome</option>
+      <option value="Field">Field</option>
+      <option value="Place">Place</option>
+      <option value="Lay">Lay</option>
+      <option value="PassOdds">PassOdds</option>
+      <option value="DontPassOdds">DontPassOdds</option>
+      <option value="ComeOdds">ComeOdds</option>
+      <option value="DontComeOdds">DontComeOdds</option>
+    </select>
+  </div>
+
+  <div class="form-row">
+    <label for="node-input-number"><i class="fa fa-hashtag"></i> Number</label>
+    <input type="number" id="node-input-number" placeholder="4,5,6,8,9,10 (when applicable)">
+  </div>
+
+  <div class="form-row">
+    <label for="node-input-betId"><i class="fa fa-tag"></i> Bet ID</label>
+    <input type="text" id="node-input-betId" placeholder="e.g. place6 (optional)">
+  </div>
+
+  <hr>
+
+  <div class="form-row">
+    <label for="node-input-valueSource"><i class="fa fa-sliders"></i> Value Source</label>
+    <select id="node-input-valueSource">
+      <option value="fixed">fixed (enter amount here)</option>
+      <option value="feed">feed (from bet-in / vars)</option>
+    </select>
+  </div>
+
+  <div class="form-row node-fixed-only">
+    <label for="node-input-amount"><i class="fa fa-dollar"></i> Amount</label>
+    <input type="number" id="node-input-amount" min="0" value="0">
+  </div>
+
+  <div class="form-row node-fixed-only">
+    <label for="node-input-unitType"><i class="fa fa-balance-scale"></i> Units</label>
+    <select id="node-input-unitType">
+      <option value="units">units</option>
+      <option value="dollars">dollars</option>
+    </select>
+  </div>
+
+  <div class="form-row">
+    <label for="node-input-note"><i class="fa fa-sticky-note"></i> Note</label>
+    <input type="text" id="node-input-note" placeholder="optional">
+  </div>
+</script>
+
+<script type="text/html" data-help-name="bet-type">
+  <p>Line/Place/Lay/Field/Odds. Choose <b>fixed</b> to enter amount + units here, or <b>feed</b> to read from <code>bet-in</code> / <code>msg.vars[betId]</code> / <code>msg.var</code>.</p>
+</script>
+
+<script type="text/javascript">
+  (function(){
+    function toggleFixedFields() {
+      const v = $("#node-input-valueSource").val();
+      const show = (v === "fixed");
+      $(".node-fixed-only")[show ? "show" : "hide"]();
+    }
+    RED.nodes.registerType("bet-type", {
+      category: "craps",
+      color: "#FDEDD0",
+      icon: "font-awesome/fa-dollar",
+      defaults: {
+        kind:        { value: "Pass", required: true },
+        number:      { value: "" },
+        betId:       { value: "" },
+        valueSource: { value: "fixed", required: true },
+        amount:      { value: 0 },
+        unitType:    { value: "units" },
+        note:        { value: "" }
+      },
+      inputs: 1,
+      outputs: 1,
+      oneditprepare: function(){
+        $("#node-input-valueSource").on("change", toggleFixedFields);
+        toggleFixedFields();
+      },
+      label: function() {
+        const n  = this.number ? ` ${this.number}` : "";
+        const vs = this.valueSource === "fixed" ? ` ${this.amount} ${this.unitType}` : " (feed)";
+        return `${this.kind}${n}${vs}`;
+      }
+    });
+  })();
+</script>

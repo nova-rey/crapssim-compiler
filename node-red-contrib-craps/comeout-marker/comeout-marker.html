@@ -1,0 +1,47 @@
+<script type="text/html" data-template-name="comeout-marker">
+  <div class="form-row">
+    <label for="node-input-action"><i class="fa fa-play-circle"></i> Action</label>
+    <select id="node-input-action">
+      <option value="begin">begin</option>
+      <option value="end">end</option>
+    </select>
+  </div>
+  <div class="form-row">
+    <label for="node-input-title"><i class="fa fa-tag"></i> Title</label>
+    <input type="text" id="node-input-title" placeholder="optional label shown in recipe">
+  </div>
+  <div class="form-row">
+    <label for="node-input-note"><i class="fa fa-sticky-note"></i> Note</label>
+    <input type="text" id="node-input-note" placeholder="optional note">
+  </div>
+</script>
+
+<script type="text/html" data-help-name="comeout-marker">
+  <p>Marks the <b>Come-Out</b> section in the recipe with <code>begin</code> or <code>end</code>.</p>
+  <pre>{
+  "type": "section",
+  "phase": "comeout",
+  "action": "begin|end",
+  "title": "...",   // optional
+  "note": "..."     // optional
+}</pre>
+</script>
+
+<script type="text/javascript">
+  RED.nodes.registerType("comeout-marker", {
+    category: "craps",
+    color: "#DDF5E3",
+    icon: "font-awesome/fa-bookmark",
+    defaults: {
+      action: { value: "begin", required: true },
+      title:  { value: "" },
+      note:   { value: "" }
+    },
+    inputs: 1,
+    outputs: 1,
+    label: function() {
+      const t = this.title ? (": " + this.title) : "";
+      return `Come-Out ${this.action}${t}`;
+    }
+  });
+</script>

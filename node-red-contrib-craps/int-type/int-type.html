@@ -1,0 +1,58 @@
+<script type="text/javascript">
+(function() {
+  RED.nodes.registerType('int-type', {
+    category: 'craps',
+    color: '#F5EEF8',
+    defaults: {
+      name:   { value: "" },
+      mode:   { value: "dollars" }, // "dollars" | "units"
+      value:  { value: 5, validate: v => Number.isFinite(Number(v)) && Number(v) >= 0 }
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: "font-awesome/fa-hashtag",
+    label: function() {
+      const m = (this.mode === "units" ? "units" : "dollars");
+      return this.name || `int-type (${m}:${this.value})`;
+    },
+    oneditprepare: function() {
+      // Nothing special; defaults render controls
+    }
+  });
+})();
+</script>
+
+<script type="text/x-red" data-template-name="int-type">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="">
+  </div>
+  <div class="form-row">
+    <label for="node-input-mode"><i class="fa fa-exchange"></i> Mode</label>
+    <select id="node-input-mode">
+      <option value="dollars">Dollars</option>
+      <option value="units">Units</option>
+    </select>
+  </div>
+  <div class="form-row">
+    <label for="node-input-value"><i class="fa fa-sort-numeric-asc"></i> Value</label>
+    <input type="number" id="node-input-value" min="0" step="1">
+  </div>
+  <div class="form-tips">
+    Outputs <code>msg.value</code> as <code>{ dollars: N }</code> or <code>{ units: N }</code> and <code>msg.valueType</code> as "dollars" or "units".<br/>
+    Downstream, the legalizer converts units→$ using <em>var-table</em> rules.
+  </div>
+</script>
+
+<script type="text/x-red" data-help-name="int-type">
+  <p>Unified numeric value node for Craps strategies.</p>
+  <ul>
+    <li><b>Mode</b>: choose whether the integer represents table <b>dollars</b> or <b>units</b>.</li>
+    <li><b>Value</b>: non-negative integer (rounded if needed).</li>
+  </ul>
+  <p>Outputs:</p>
+  <pre>msg.value = { dollars: N }  // if Mode = Dollars
+msg.value = { units: N }    // if Mode = Units
+msg.valueType = "dollars" | "units"</pre>
+  <p>Compatibility: also sets <code>msg.amount</code> and <code>msg.amountMode</code> for older flows.</p>
+</script>

@@ -1,0 +1,33 @@
+<script type="text/html" data-template-name="var-bankroll">
+  <div class="form-row">
+    <label for="node-input-amount"><i class="fa fa-money"></i> Bankroll ($)</label>
+    <input type="number" id="node-input-amount" min="1" value="300">
+  </div>
+  <div class="form-row">
+    <label for="node-input-note"><i class="fa fa-sticky-note"></i> Note</label>
+    <input type="text" id="node-input-note" placeholder="optional">
+  </div>
+</script>
+
+<script type="text/html" data-help-name="var-bankroll">
+  <p>Sets <code>msg.sim.bankroll</code> for the exporter harness. Defaults to 300 if not set.</p>
+</script>
+
+<script type="text/javascript">
+  (function(){
+    RED.nodes.registerType("var-bankroll", {
+      category: "craps",
+      color: "#FFF7E6",
+      icon: "font-awesome/fa-briefcase",
+      defaults: {
+        amount: { value: 300, required: true },
+        note:   { value: "" }
+      },
+      inputs: 1,
+      outputs: 1,
+      label: function(){
+        return `bankroll=$${this.amount}`;
+      }
+    });
+  })();
+</script>

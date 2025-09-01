@@ -1,0 +1,59 @@
+<script type="text/html" data-template-name="var-seed">
+  <div class="form-row">
+    <label for="node-input-mode"><i class="fa fa-random"></i> Mode</label>
+    <select id="node-input-mode">
+      <option value="none">none (no seed)</option>
+      <option value="fixed">fixed</option>
+      <option value="random">random each run</option>
+    </select>
+  </div>
+
+  <div class="form-row fixed-only">
+    <label for="node-input-value"><i class="fa fa-key"></i> Seed value</label>
+    <input type="text" id="node-input-value" placeholder="e.g. 12345 or my-seed">
+  </div>
+
+  <div class="form-row">
+    <label for="node-input-note"><i class="fa fa-sticky-note"></i> Note</label>
+    <input type="text" id="node-input-note" placeholder="optional">
+  </div>
+</script>
+
+<script type="text/html" data-help-name="var-seed">
+  <p>Sets <code>msg.sim.seed</code> for the exporter harness.</p>
+  <ul>
+    <li><b>none</b>: no seed → fresh randomness each run.</li>
+    <li><b>fixed</b>: use the seed you enter (number or string) → deterministic runs.</li>
+    <li><b>random each run</b>: generates a new random integer seed on each message.</li>
+  </ul>
+</script>
+
+<script type="text/javascript">
+  (function(){
+    function toggleFixed(){
+      const show = $("#node-input-mode").val()==="fixed";
+      $(".fixed-only")[show ? "show" : "hide"]();
+    }
+    RED.nodes.registerType("var-seed", {
+      category: "craps",
+      color: "#F0E6FF",
+      icon: "font-awesome/fa-random",
+      defaults: {
+        mode:  { value: "none", required: true },
+        value: { value: "" },
+        note:  { value: "" }
+      },
+      inputs: 1,
+      outputs: 1,
+      oneditprepare: function(){
+        $("#node-input-mode").on("change", toggleFixed);
+        toggleFixed();
+      },
+      label: function(){
+        if (this.mode === "fixed") return this.value ? `seed=${this.value}` : "seed=(fixed)";
+        if (this.mode === "random") return "seed=random";
+        return "seed=none";
+      }
+    });
+  })();
+</script>

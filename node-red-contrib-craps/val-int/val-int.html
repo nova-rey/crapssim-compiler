@@ -1,0 +1,30 @@
+<script type="text/html" data-template-name="val-int">
+  <div class="form-row">
+    <label for="node-input-nameKey"><i class="fa fa-tag"></i> Name/ID (optional)</label>
+    <input type="text" id="node-input-nameKey" placeholder="e.g. place6 (optional)">
+  </div>
+  <div class="form-row">
+    <label for="node-input-value"><i class="fa fa-hashtag"></i> Value</label>
+    <input type="number" id="node-input-value" value="1" min="0">
+  </div>
+
+</script>
+
+<script type="text/javascript">
+  RED.nodes.registerType("val-int", {
+    category: "craps",
+    color: "#E5F5E0",
+    icon: "font-awesome/fa-hashtag",
+    defaults: {
+      nameKey: { value: "" },     // optional
+      value:   { value: 1, required: true },
+      evoMode: { value: 0 }
+    },
+    inputs: 1,
+    outputs: 1,
+    label: function() {
+      const n = this.nameKey ? ` (${this.nameKey})` : "";
+      return `int=${this.value}${n}`;
+    }
+  });
+</script>

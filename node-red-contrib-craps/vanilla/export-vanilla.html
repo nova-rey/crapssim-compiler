@@ -1,0 +1,33 @@
+<script type="text/javascript">
+RED.nodes.registerType('export', {
+  category: 'craps',
+  color: '#FDEBD0',
+  defaults: {
+    name: { value: "" },
+    filename: { value: "strategy.py" }
+  },
+  inputs: 1,
+  outputs: 1,
+  icon: "font-awesome/fa-upload",
+  label: function() { return this.name || "export"; }
+});
+</script>
+
+<script type="text/x-red" data-template-name="export">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="">
+  </div>
+  <div class="form-row">
+    <label for="node-input-filename"><i class="fa fa-file"></i> Filename</label>
+    <input type="text" id="node-input-filename" placeholder="strategy_vanilla.py">
+  </div>
+  <div class="form-tips">
+    Emits a CrapsSim-compatible Python strategy with all non-bubble bets auto-legalized.
+  </div>
+</script>
+
+<script type="text/x-red" data-help-name="export">
+  <p>Exports the incoming normalized bet graph to a CrapsSim Python strategy.</p>
+  <p>Uses <code>var-table</code> rules to convert units → dollars and legalize non-bubble bets.</p>
+</script>

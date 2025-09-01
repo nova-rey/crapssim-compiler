@@ -1,0 +1,110 @@
+<script type="text/javascript">
+(function() {
+  RED.nodes.registerType('clear', {
+    category: 'craps',
+    color: '#FADBD8',
+    defaults: {
+      name:  { value: "" },
+      mode:  { value: "all" },       // "all" | "specific"
+      types: { value: [] },           // array of bet types to clear
+      points:{ value: [] }            // array of points to clear
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: "font-awesome/fa-eraser",
+    label: function() {
+      if (this.mode === "all") return this.name || "clear (all)";
+      const t = Array.isArray(this.types)  ? this.types.join("|") : "";
+      const p = Array.isArray(this.points) ? this.points.join(",") : "";
+      const pieces = [];
+      if (t) pieces.push(`types:${t}`);
+      if (p) pieces.push(`points:${p}`);
+      return this.name || `clear (${pieces.join(" ") || "specific"})`;
+    },
+    oneditprepare: function() {
+      function setSpecificVisible(show) {
+        const disp = show ? "" : "none";
+        $("#clear-specific-types").css("display", disp);
+        $("#clear-specific-points").css("display", disp);
+      }
+
+      // Initialize visibility
+      const modeSel = $("#node-input-mode");
+      setSpecificVisible(modeSel.val() === "specific");
+      modeSel.on("change", function() {
+        setSpecificVisible($(this).val() === "specific");
+      });
+
+      // Load multi-select defaults
+      const typesSelect = $("#node-input-types");
+      const selectedTypes = this.types || [];
+      typesSelect.val(selectedTypes);
+
+      const pointsSelect = $("#node-input-points");
+      const selectedPoints = this.points || [];
+      pointsSelect.val(selectedPoints.map(String));
+    }
+  });
+})();
+</script>
+
+<script type="text/x-red" data-template-name="clear">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="">
+  </div>
+
+  <div class="form-row">
+    <label for="node-input-mode"><i class="fa fa-toggle-on"></i> Mode</label>
+    <select id="node-input-mode">
+      <option value="all">All bets</option>
+      <option value="specific">Specific bets…</option>
+    </select>
+  </div>
+
+  <div id="clear-specific-types" class="form-row" style="display:none;">
+    <label for="node-input-types"><i class="fa fa-filter"></i> Types</label>
+    <select id="node-input-types" multiple size="8" style="width: 70%;">
+      <option value="pass">Pass</option>
+      <option value="dont_pass">Don't Pass</option>
+      <option value="come">Come</option>
+      <option value="dont_come">Don't Come</option>
+      <option value="field">Field</option>
+      <option value="place">Place</option>
+      <option value="lay">Lay</option>
+      <option value="hardway">Hardway</option>
+      <option value="prop">Prop</option>
+      <option value="odds">Odds</option>
+    </select>
+    <div class="form-tips">Choose one or more bet types to clear.</div>
+  </div>
+
+  <div id="clear-specific-points" class="form-row" style="display:none;">
+    <label for="node-input-points"><i class="fa fa-bullseye"></i> Points</label>
+    <select id="node-input-points" multiple size="6" style="width: 70%;">
+      <option value="4">4</option>
+      <option value="5">5</option>
+      <option value="6">6</option>
+      <option value="8">8</option>
+      <option value="9">9</option>
+      <option value="10">10</option>
+    </select>
+    <div class="form-tips">
+      If both <b>Types</b> and <b>Points</b> are set, a bet must match <em>both</em> to be cleared.<br/>
+      If only one is set, any bet matching that filter is cleared.
+    </div>
+  </div>
+</script>
+
+<script type="text/x-red" data-help-name="clear">
+  <p>Clears bets from <code>msg.bets</code>.</p>
+  <ul>
+    <li><b>All bets</b>: empties <code>msg.bets</code>.</li>
+    <li><b>Specific bets</b>: clear by bet <b>type</b> and/or <b>point</b>.</li>
+  </ul>
+  <p><b>Runtime override</b>: You can drive clearing via message, e.g.:</p>
+  <pre>msg.clear = { all: true }              // clear all
+msg.clear = { types: ["place"], points: [6,8] }  // clear Place on 6 & 8
+msg.clear = { points: [5] }             // clear anything tied to point 5</pre>
+  <p>Result: <code>msg.bets</code> is filtered; <code>msg.cleared</code> tells how many were removed.</p>
+</script>

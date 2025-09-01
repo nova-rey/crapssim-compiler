@@ -1,0 +1,65 @@
+<script type="text/javascript">
+(function() {
+  RED.nodes.registerType('validator', {
+    category: 'craps',
+    color: '#D6EAF8',
+    defaults: {
+      name:   { value: "" },
+      strict: { value: false },   // If true, any warning/error sets ok=false
+      dedupe: { value: true }     // Combine duplicate same-type/point bets
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: "font-awesome/fa-check",
+    label: function() {
+      return this.name || "validator";
+    }
+  });
+})();
+</script>
+
+<script type="text/x-red" data-template-name="validator">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="">
+  </div>
+
+  <div class="form-row">
+    <label for="node-input-strict"><i class="fa fa-exclamation-triangle"></i> Strict mode</label>
+    <input type="checkbox" id="node-input-strict" style="width:auto;">
+    <span class="form-tips">If enabled, any warning or error marks validation as failed (<code>ok=false</code>).</span>
+  </div>
+
+  <div class="form-row">
+    <label for="node-input-dedupe"><i class="fa fa-compress"></i> Combine duplicates</label>
+    <input type="checkbox" id="node-input-dedupe" style="width:auto;" checked>
+    <span class="form-tips">Merge same-type/point bets into a single amount; adds a warning when applied.</span>
+  </div>
+
+  <div class="form-tips">
+    <b>What this node does:</b> Light sanity check + normalization.<br>
+    • Reads table rules from <code>var-table</code> (bubble-aware).<br>
+    • Converts mixed values ({units|dollars} or numbers) to a dollar amount.<br>
+    • In <b>non-bubble</b>, rounds to legal increments/mins (warns if adjustments). In <b>bubble</b>, allows $1 increments (no rounding).<br>
+    • Checks structure: valid types, needed points, positive amounts. Skips incomplete bets with warnings.<br>
+    • Emits <code>msg.bets</code> normalized and <code>msg.validation</code> with <code>warnings</code>/<code>errors</code>.
+  </div>
+</script>
+
+<script type="text/x-red" data-help-name="validator">
+  <p><b>Strategy validator (bubble-aware).</b></p>
+  <p>This node performs a lightweight, user-friendly validation pass that prepares bets for export while avoiding overly strict policing. It is designed to be used before <em>Export</em>.</p>
+  <h4>Behavior</h4>
+  <ul>
+    <li>Reads table rules from <code>var-table</code>. If bubble is selected, $1 increments are allowed.</li>
+    <li>Normalizes amounts: accepts numbers or <code>{ units | dollars }</code>, converts to a single dollar amount.</li>
+    <li>Non-bubble: rounds to legal increments/minimums; bubble: leaves $1 increments.</li>
+    <li>Checks for malformed or incomplete bets and skips them with warnings.</li>
+    <li>Optionally combines duplicate bets of the same type &amp; point into one amount.</li>
+  </ul>
+  <h4>Outputs</h4>
+  <pre>msg.bets        // normalized list of bets with concrete dollars
+msg.validation  // { ok, warnings:[], errors:[], table:{...} }</pre>
+  <h4>Strict mode</h4>
+  <p>If enabled, any warning or error marks <code>ok=false</code> to support “fail-fast” flows or CI pipelines.</p>
+</script>

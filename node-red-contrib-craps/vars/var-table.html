@@ -1,0 +1,47 @@
+<script type="text/javascript">
+RED.nodes.registerType('var-table', {
+  category: 'craps',
+  color: '#C0E6FF',
+  defaults: {
+    name: { value: "" },
+    mode: { value: "10" } // default $10 table
+  },
+  inputs: 1,
+  outputs: 1,
+  icon: "font-awesome/fa-table",
+  label: function() {
+    const label = this.mode === "bubble" ? "bubble" : "$" + this.mode;
+    return this.name || ("var-table: " + label);
+  },
+  oneditprepare: function() {
+    $("#node-input-mode").val(this.mode || "10");
+  }
+});
+</script>
+
+<script type="text/x-red" data-template-name="var-table">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="optional">
+  </div>
+  <div class="form-row">
+    <label for="node-input-mode"><i class="fa fa-sliders"></i> Table</label>
+    <select id="node-input-mode">
+      <option value="bubble">bubble ($1 increments)</option>
+      <option value="5">$5 table</option>
+      <option value="10">$10 table</option>
+      <option value="15">$15 table</option>
+      <option value="20">$20 table</option>
+      <option value="25">$25 table</option>
+    </select>
+  </div>
+  <div class="form-tips">
+    <b>Behavior:</b> bubble = $1 increments (no coercion). Other tables: all bets are auto-legalized on export (Place/Lay/Line/Field/Hardways/Props/Odds).
+  </div>
+</script>
+
+<script type="text/x-red" data-help-name="var-table">
+  <p>Select the table scale: bubble, $5, $10, $15, $20, $25.</p>
+  <p>Outputs <code>msg.varTable</code>; also caches the same object at <code>flow.varTable</code> for exporter/validator access.</p>
+  <p>Non-bubble tables: exporter converts designer “units” to dollars via table multiplier and legalizes all bets (e.g., Place 6/8 in $6 increments; 4/5/9/10 in $5 increments; props/line/field at table min multiples; odds capped to 3-4-5x).</p>
+</script>

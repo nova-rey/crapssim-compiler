@@ -1,0 +1,42 @@
+{
+  "name": "node-red-contrib-craps",
+  "version": "1.0.0",
+  "description": "Node-RED nodes for designing, validating, and exporting CrapsSim-compatible strategies.",
+  "license": "MIT",
+  "keywords": [
+    "node-red",
+    "craps",
+    "casino",
+    "dice",
+    "strategy"
+  ],
+  "node-red": {
+    "nodes": {
+      "bet-type": "bet-type/bet-type.js",
+      "bet-prop": "bet-prop/bet-prop.js",
+      "val-int": "val-int/val-int.js",
+      "int-type": "int-type/int-type.js",
+      "bet-in": "bet-in/bet-in.js",
+      "clear": "clear/clear.js",
+      "comeout-marker": "comeout-marker/comeout-marker.js",
+      "maingame-marker": "maingame-marker/maingame-marker.js",
+      "endgame-marker": "endgame-marker/endgame-marker.js",
+      "roll-marker": "roll-marker/roll-marker.js",
+
+
+      "validator": "vanilla/validator-vanilla.js",
+      "export": "vanilla/export-vanilla.js",
+
+      "var-bankroll": "vars/var-bankroll.js",
+      "var-max-rolls": "vars/var-max-rolls.js",
+      "var-seed": "vars/var-seed.js",
+      "var-table": "vars/var-table.js"
+    }
+  },
+  "dependencies": {},
+  "author": "Your Name",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your/repo"
+  }
+}
